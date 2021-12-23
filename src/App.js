@@ -1,23 +1,66 @@
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 import './App.css';
+
+
+import Login from './Components/Loginsystem/Login';
+import axios from 'axios';
+import Home from "./Components/Home/Home";
+import PrivateRoute from "./Components/Loginsystem/PrivateRoute";
+import Appointment from "./Components/Appointpages/Appointment/Appointment";
+import Dashboard from "./Components/Dashboard/Dashboard/Dashboard";
+import Test from "./Components/Test";
+import AdminRoute from "./Components/Loginsystem/AdminRoute";
+import Profile from "./Components/Dashboard/Doctors/Profile";
+
+var token = null;
+if (localStorage.getItem('user')) {
+  var obj = JSON.parse(localStorage.getItem('user'));
+  token = obj.access_token.token;
+}
+
+axios.defaults.headers.common["Authorization"] = token;
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+
+        <Switch>
+
+          <Route exact path='/'>
+            <Home></Home>
+          </Route>
+          <Route exact path='/home'>
+            <Home></Home>
+          </Route>
+          <Route path='/login'>
+            <Login>
+            </Login>
+          </Route>
+          <AdminRoute path='/profile'>
+            <Profile>
+
+            </Profile>
+          </AdminRoute>
+          <PrivateRoute path='/appointment'>
+            <Appointment></Appointment>
+          </PrivateRoute>
+          <AdminRoute path='/dashboard'>
+            <Dashboard></Dashboard>
+          </AdminRoute>
+          <Route exact path='/test'>
+            <Test></Test>
+          </Route>
+
+
+        </Switch>
+
+
+      </Router>
     </div>
   );
 }
